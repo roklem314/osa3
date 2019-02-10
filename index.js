@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 
 const morgan  = require('morgan')
 app.use(bodyParser.json())
-
+const cors = require("cors"); 
 const uuid = require('uuid')
 
 morgan.token('id', function getBody (req) {
@@ -16,12 +16,10 @@ morgan.token('body', function (req, res) {
     app.use(morgan(':method :url :response-time :id '))
 })
 
-
-// const cors = require("cors"); 
-
 app.use(assignId)
 //app.use(morgan(':method :url :response-time :id '))
 app.use(morgan('tiny'))
+app.use(cors())
 // app.use(cors({  
 //     origin: ["http://localhost:3001/api/persons"],
 //     methods: ["POST"],
@@ -147,6 +145,7 @@ app.get('/api/persons/:id', (request, response) => {
  
   
 
-const port = 3001
-app.listen(port)
-console.log(`Server running on port ${port}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})

@@ -52,19 +52,37 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
+  var found = 0;
+  persons.find(function(reservedName){
+    // console.log(reservedName.name === body.name)
+        if(reservedName.name === body.name ){
+            found = 1;
+            // console.log("Found " + found)
+        }
+       
+  })
+  
+  
 
   if (body.name === undefined) {
     return response.status(400).json({ 
       error: 'name missing' 
     })
-
+    
   }
   if(body.number === undefined){
     return response.status(400).json({ 
         error: 'number missing' 
       })
+    }
 
-  }
+   if(found === 1) {
+    return response.status(400).json({   
+        error: 'name is reserved' 
+        
+      }) 
+
+   }
 
   const person = {
     id: generateId(),

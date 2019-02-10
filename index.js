@@ -2,7 +2,31 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 
+const morgan  = require('morgan')
 app.use(bodyParser.json())
+
+const uuid = require('uuid')
+
+morgan.token('id', function getBody (req) {
+  return req.id
+})
+morgan.token('body', function (req, res) { 
+    console.log(req.method)
+    if(req.method == 'POST')
+    app.use(morgan(':method :url :response-time :id '))
+})
+
+
+// const cors = require("cors"); 
+
+app.use(assignId)
+//app.use(morgan(':method :url :response-time :id '))
+app.use(morgan('tiny'))
+// app.use(cors({  
+//     origin: ["http://localhost:3001/api/persons"],
+//     methods: ["POST"],
+//     allowedHeaders: ["Content-Type","request"]
+// }));
 
 let persons = [
   {
@@ -29,6 +53,10 @@ let persons = [
 app.get('/api',(req,res) => {
     res.send('<h1>Hello World!</h1>')
 })
+function assignId (req, res, next) {
+    req.id = uuid.v4()
+    next()
+  }
 
 app.get('/info',(req,res) => {
     const koko = persons.length
@@ -110,6 +138,13 @@ app.get('/api/persons/:id', (request, response) => {
   
     response.status(204).end();
   });
+
+//   app.listen(3000, function() {  
+//     console.log("My API is running...");
+// });
+
+// module.exports = app; 
+ 
   
 
 const port = 3001

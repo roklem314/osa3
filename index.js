@@ -21,13 +21,24 @@ let persons = [
     number: '040-3456789',
   },
   {
-  id: 4,
+    id: 4,
     name: 'Elros Half-elf',
     number: '044-2346744',
   },
 ]
 app.get('/api',(req,res) => {
     res.send('<h1>Hello World!</h1>')
+})
+
+app.get('/info',(req,res) => {
+    const koko = persons.length
+
+    var dt = new Date();
+    var utcDate = dt.toUTCString();
+
+    res.send('Puhelinluettelossa ' + koko + ' henkilön tiedot. '+utcDate)
+
+
 })
 app.get('/api/persons', (req,res) => {
     res.json(persons)
@@ -48,29 +59,29 @@ app.post('/persons', (request, response) => {
     })
   }
 
-  const note = {
+  const person = {
     name: body.name,
     important: body.important || false,
     number: new number(),
     id: generateId(),
   }
 
-  persons = persons.concat(note)
+  persons = persons.concat(person)
 
-  response.json(note)
+  response.json(person)
 })
-app.get('/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const note = persons.find(note => note.id === id)
-    if (note) {
-        response.json(note)
+    const person = persons.find(person => person.id === id)
+    if (person) {
+        response.json(person)
       } else {
         response.status(404).end()
       }
   })
-  app.delete('/persons/:id', (request, response) => {
+  app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
-    persons = persons.filter(note => note.id !== id);
+    persons = persons.filter(person => person.id !== id);
   
     response.status(204).end();
   });

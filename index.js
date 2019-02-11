@@ -93,13 +93,20 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
   var found = 0;
-  persons.find(function(reservedName){
-    // console.log(reservedName.name === body.name)
-        if(reservedName.name === body.name ){
-            found = 1;
-            // console.log("Found " + found)
-        }
+  // persons.find(function(reservedName){
+  //   // console.log(reservedName.name === body.name)
+  //       if(reservedName.name === body.name ){
+  //           found = 1;
+  //           // console.log("Found " + found)
+  //       }
        
+  // })
+  Person.find(request.params.name).then(person => {
+    if (person.name == request.params.name) {
+      
+      found = 1; 
+      console.log("Found " + found)
+    }
   })
   if (body.name === undefined) {
     return response.status(400).json({ 
@@ -114,10 +121,11 @@ app.post('/api/persons', (request, response) => {
     }
 
    if(found === 1) {
-    return response.status(400).json({   
-        error: 'name is reserved' 
+    // return response.status(400).json({   
+    //     error: 'name is reserved' 
+    response.status(204).end()
         
-      }) 
+      // }) 
 
    }
 

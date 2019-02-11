@@ -6,6 +6,7 @@ const morgan  = require('morgan')
 app.use(bodyParser.json())
 const cors = require("cors"); 
 const uuid = require('uuid')
+app.use(express.static('build'))
 
 morgan.token('id', function getBody (req) {
   return req.id

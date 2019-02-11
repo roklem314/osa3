@@ -18,12 +18,12 @@ mongoose.connect(url, { useNewUrlParser: true })
  
     name: {
         type: String,
-        minlength: 5,
+        minlength: 3,
         required: true
       },
       number: { 
         type: String,
-        maxlength: 13,
+        minlength: 8,
         required: true
       },
       id: String

@@ -1,4 +1,6 @@
-require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
@@ -62,7 +64,8 @@ function assignId (req, res, next) {
   }
 
 app.get('/info',(req,res) => {
-    const koko = persons.length
+    const koko = persons.length;
+    console.log(koko);
 
     var dt = new Date();
     var utcDate = dt.toUTCString();
@@ -75,7 +78,7 @@ app.get('/info',(req,res) => {
 //     res.json(persons)
 // })
 app.get('/api/persons', (request, response) => {
-  Person.find({}).then(persons => {
+    Person.find({}).then(persons => {
     response.json(persons.map(person => person.toJSON()))
   })
 })
@@ -130,6 +133,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson.toJSON())
   })
+  .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -179,7 +183,11 @@ app.get('/api/persons/:id', (request, response, next) => {
   
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
       return response.status(400).send({ error: 'malformatted id' })
-    } 
+    } else if (error.name === 'ValidationError(name)') {
+      return response.status(400).json({ error: error.message })
+    } else if (error.number === 'ValidationError(number)') {
+    return response.status(400).json({ error: error.message })
+    }
   
     next(error)
   }

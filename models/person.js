@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator');
+
 
 mongoose.set('useFindAndModify', false)
 
@@ -19,7 +21,8 @@ mongoose.connect(url, { useNewUrlParser: true })
     name: {
         type: String,
         minlength: 3,
-        required: true
+        required: true,
+        unique: true
       },
       number: { 
         type: String,
@@ -28,6 +31,7 @@ mongoose.connect(url, { useNewUrlParser: true })
       },
       id: String
     })
+  personSchema.plugin(uniqueValidator);
 
   personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
@@ -36,5 +40,6 @@ mongoose.connect(url, { useNewUrlParser: true })
       delete returnedObject.__v
     }
   })
+
 
 module.exports = mongoose.model('Person', personSchema)
